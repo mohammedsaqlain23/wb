@@ -49,10 +49,10 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <style>
-        /* Adding a gradient background with blue and purple */
+        /* Sky blue background */
         body {
-            background: linear-gradient(to bottom, #4c6ef5, #7b5fff, #b44cff); /* Gradient from blue to purple */
-            background-size: cover; /* Ensures the gradient covers the entire page */
+            background-color: #87CEEB; /* Sky blue background */
+            background-size: cover; /* Ensures the background color covers the entire page */
             background-position: center;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
             margin-top: 100px; /* Adds space from the top */
         }
 
-        input[type="text"], input[type="email"] {
+        input[type="text"], input[type="email"], input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -111,7 +111,7 @@ if (isset($_POST['submit'])) {
         <h2>Enter Your Details</h2>
         Name: <input type="text" name="username" required><br>
         Email: <input type="email" name="email" required><br>
-        Mobile No: <input type="text" name="mobel" id="mobel" required><br>
+        Mobile No: <input type="number" name="mobel" id="mobel" required><br>
         <span id="mobelError" class="error"></span><br>
         City: <input type="text" name="city" required><br>
         <input type="submit" name="submit" value="Send Data">
@@ -138,3 +138,4 @@ if (isset($_POST['submit'])) {
 
 </body>
 </html>
+
