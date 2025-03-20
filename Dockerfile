@@ -1,14 +1,20 @@
-# Use Python as base image
-FROM python:3.10
+# Use official PHP Apache image
+FROM php:8.2-apache
 
-# Set the working directory inside the container
-WORKDIR /app
+# Install required PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Copy all files from your GitHub repo into the container
+# Enable Apache mod_rewrite (for Laravel or other frameworks)
+RUN a2enmod rewrite
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files to the container
 COPY . .
 
-# Install dependencies (if required)
-RUN pip install -r requirements.txt
+# Expose port 80 for web traffic
+EXPOSE 80
 
-# Run your application (modify as needed)
-CMD ["python", "main.py"]
+# Start Apache
+CMD ["apache2-foreground"]
