@@ -1,17 +1,17 @@
-# Use an official PHP image with Apache
+# Use the official PHP image with Apache
 FROM php:8.1-apache
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files to container
+# Copy all application files
 COPY . .
 
-# Install necessary PHP extensions (optional, adjust as needed)
+# Install necessary PHP extensions
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Expose port 80
 EXPOSE 80
 
-# Start Apache in foreground mode
+# Start Apache
 CMD ["apache2-foreground"]
