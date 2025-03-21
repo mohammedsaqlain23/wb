@@ -7,7 +7,7 @@ if (isset($_POST['submit'])) {
     $city = $_POST['city'];
 
     // Database credentials
-    $host = 'localhost';
+    $host = 'mysql-container';
     $user = 'root';
     $pass = '';
     $dbname = 'saq';
