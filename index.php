@@ -1,15 +1,15 @@
 <?php
 if (isset($_POST['submit'])) {
-    // Get form values
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $mobile = $_POST['mobel'];  // Renamed from $mobel to $mobile
-    $city = $_POST['city'];
+    // Get form values and sanitize input
+    $username = htmlspecialchars($_POST['username']);
+    $email = htmlspecialchars($_POST['email']);
+    $mobile = htmlspecialchars($_POST['mobile']);  // Fixed field name
+    $city = htmlspecialchars($_POST['city']);
 
     // Database credentials
     $host = 'mysql_container';
     $user = 'root';
-    $pass = '';
+    $pass = 'rootpass';  // Use the correct password
     $dbname = 'saq';
 
     // Create connection
@@ -17,23 +17,21 @@ if (isset($_POST['submit'])) {
 
     // Check connection
     if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
+        die("<p style='color:red;'>❌ Connection failed: " . mysqli_connect_error() . "</p>");
     }
 
     // Prepare SQL query with placeholders
-    $sql = "INSERT INTO student (username, email, mobile, city) VALUES (?, ?, ?, ?)";  // Updated column name to 'mobile'
+    $sql = "INSERT INTO student (username, email, mobile, city) VALUES (?, ?, ?, ?)";
 
     // Prepare the statement
     $stmt = mysqli_prepare($conn, $sql);
-
-    // Bind the parameters (s stands for strings)
     mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $mobile, $city);
 
     // Execute the prepared statement
     if (mysqli_stmt_execute($stmt)) {
-        echo "Data inserted successfully.";
+        echo "<p style='color:green;'>✅ Data inserted successfully.</p>";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo "<p style='color:red;'>⚠️ Error: " . mysqli_error($conn) . "</p>";
     }
 
     // Close the statement and connection
@@ -47,30 +45,29 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Submit Your Details</title>
     <style>
-        /* Adding a gradient background with blue and purple */
         body {
-            background: linear-gradient(to bottom, #4c6ef5, #7b5fff, #b44cff); /* Gradient from blue to purple */
-            background-size: cover; /* Ensures the gradient covers the entire page */
-            background-position: center;
+            background: linear-gradient(to bottom, #4c6ef5, #7b5fff, #b44cff);
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-        
-        /* Form styling */
-        form {
-            margin: 0 auto;
-            width: 300px;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque white background for form */
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            margin-top: 100px; /* Adds space from the top */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        input[type="text"], input[type="email"] {
+        form {
+            width: 350px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -79,26 +76,20 @@ if (isset($_POST['submit'])) {
         }
 
         input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #6c63ff; /* Purple button color */
+            width: 100%;
+            padding: 10px;
+            background-color: #6c63ff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
 
         input[type="submit"]:hover {
-            background-color: #5a4df5; /* Darker purple on hover */
+            background-color: #5a4df5;
         }
 
-        /* Add responsiveness */
-        @media (max-width: 600px) {
-            form {
-                width: 90%;
-            }
-        }
-
-        /* Error message styling */
         .error {
             color: red;
             font-size: 12px;
@@ -109,33 +100,29 @@ if (isset($_POST['submit'])) {
 
     <form action="#" method="POST" onsubmit="return validateForm()">
         <h2>Enter Your Details</h2>
-        Name: <input type="text" name="username" required><br>
-        Email: <input type="email" name="email" required><br>
-        Mobile No: <input type="number" name="mobel" id="mobel" required><br>
-        <span id="mobelError" class="error"></span><br>
-        City: <input type="text" name="city" required><br>
+        <input type="text" name="username" placeholder="Full Name" required><br>
+        <input type="email" name="email" placeholder="Email Address" required><br>
+        <input type="number" name="mobile" id="mobile" placeholder="Mobile Number" required><br>
+        <span id="mobileError" class="error"></span><br>
+        <input type="text" name="city" placeholder="City" required><br>
         <input type="submit" name="submit" value="Send Data">
     </form>
 
     <script>
         function validateForm() {
-            var mobile = document.getElementById("mobel").value;
-            var mobelError = document.getElementById("mobelError");
+            var mobile = document.getElementById("mobile").value;
+            var mobileError = document.getElementById("mobileError");
 
-            // Clear previous error message
-            mobelError.textContent = "";
+            mobileError.textContent = "";
 
-            // Check if mobile number is valid (only numbers and 10 digits)
             var mobilePattern = /^[0-9]{10}$/;
             if (!mobilePattern.test(mobile)) {
-                mobelError.textContent = "Please enter a valid 10-digit mobile number.";
-                return false; // Prevent form submission
+                mobileError.textContent = "Please enter a valid 10-digit mobile number.";
+                return false;
             }
-
-            return true; // Allow form submission if validation passes
+            return true;
         }
     </script>
 
 </body>
 </html>
-
